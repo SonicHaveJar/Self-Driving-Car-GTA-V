@@ -1,3 +1,4 @@
+from pynput.keyboard import Key, Controller
 from inputs import get_gamepad
 import math
 import threading
@@ -91,4 +92,15 @@ class XboxController(object):
                 elif event.code == 'BTN_TRIGGER_HAPPY4':
                     self.DownDPad = event.state
 
-#https://stackoverflow.com/questions/43483121/simulate-xbox-controller-input-with-python
+#Temporal, while i find a solution to vJoy input.
+class KeyboardSimulator():
+    def __init__(self):
+        self.keyboard = Controller()
+
+    def steering(self, value):
+        if value > 0:
+            keyboard.press('d')
+            keyboard.release('d')
+        else:
+            keyboard.press('a')
+            keyboard.release('a')

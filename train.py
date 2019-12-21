@@ -43,3 +43,12 @@ model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 checkpoint = ModelCheckpoint('./data/models/model-{epoch:03d}-{accuracy:03f}-{val_accuracy:03f}.h5', verbose=1, monitor='val_loss', save_best_only=True, mode='auto')  
 
 model.fit(X, y, batch_size=16, epochs=1, validation_split=0.2, callbacks=[checkpoint], verbose=1)
+
+'''
+Traceback (most recent call last):
+  File ".\train.py", line 23, in <module>
+    X = [np.array(Image.open(img)) for img in X.values]
+  File ".\train.py", line 23, in <listcomp>
+    X = [np.array(Image.open(img)) for img in X.values]
+MemoryError: Unable to allocate array with shape (300, 300, 3) and data type uint8
+'''
