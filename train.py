@@ -7,17 +7,22 @@ from keras.optimizers import Adam
 from keras.layers import Lambda, Conv2D, Dropout, Dense, Flatten
 from keras.callbacks import ModelCheckpoint
 
-np_load_old = np.load
-np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+from PIL import Image
+import os
 
-data = np.load("./data/data.npy")
+path = './data/'
+imgs_path = path + 'imgs/'
 
-df = pd.DataFrame(data)
+file = path + 'data.csv'
 
-X = df[0]
-y = df[1]
+df = pd.read_csv(file, names=['img', 'steering'])
 
-X = np.array([*X])
+X = df['img'][1:]
+y = df['steering'][1:]
+
+X = [np.array(Image.open(img)) for img in X.values]
+
+X = np.array(X)
 
 model = Sequential()
 model.add(Lambda(lambda x: x/127.5-1.0, input_shape=(300, 300, 3)))
@@ -37,4 +42,4 @@ model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])
 
 checkpoint = ModelCheckpoint('./data/models/model-{epoch:03d}-{accuracy:03f}-{val_accuracy:03f}.h5', verbose=1, monitor='val_loss', save_best_only=True, mode='auto')  
 
-model.fit(X, y,batch_size=100, epochs=1, validation_split=0.2, callbacks=[checkpoint], verbose=1)
+model.fit(X, y, batch_size=16, epochs=1, validation_split=0.2, callbacks=[checkpoint], verbose=1)

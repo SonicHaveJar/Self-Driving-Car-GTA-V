@@ -90,3 +90,5 @@ class XboxController(object):
                     self.UpDPad = event.state
                 elif event.code == 'BTN_TRIGGER_HAPPY4':
                     self.DownDPad = event.state
+
+#https://stackoverflow.com/questions/43483121/simulate-xbox-controller-input-with-python
