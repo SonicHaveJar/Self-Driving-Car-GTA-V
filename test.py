@@ -1,6 +1,31 @@
-from utils.lines import get_road_lines
+import numpy as np 
+import pandas as pd
+import matplotlib.pyplot as plt
+
+np_load_old = np.load
+
+# modify the default parameters of np.load
+np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+
+x = np.load("./data.npy")
+
+df = pd.DataFrame(x)
+
+X = df[0]
+y = df[1]
 
 
+print(np.array([*X]).shape)
+print(np.array([*y]).shape)
+
+'''
+plt.imshow(x[0][0])
+plt.show()
+f = np.array([(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23),(np.random.random((300, 300, 3)), 0.23)])
+print(f[0].shape)
+'''
+
+'''
 from multiprocessing import freeze_support
 from inputs import get_key
 import threading
@@ -37,7 +62,7 @@ if __name__ == "__main__":
 #    get_road_lines(True)
 # = cv2.imread('road.jpg')
 #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-'''
+
 import matplotlib.pylab as plt
 import cv2
 import numpy as np
@@ -91,5 +116,6 @@ frame = process(image)
 plt.imshow(frame)
 plt.show()
 
+from utils.lines import get_road_lines
 
 '''
