@@ -2,9 +2,25 @@ import numpy as np
 import cv2
 from mss import mss
 from PIL import Image
+from time import time
+
+#        BENCHMARK IN MY PC
+#+---------------------------------+
+#|                 |  Average FPS  |
+#+---------------------------------+
+#| View enabled    | 8.24212239173 |
+#| View disabled   | 11.3710106884 |
+#+---------------------------------+
+
+screen_size = (1920, 1080)
+#gta_window_size = (800, 600)
+capture_size = (800, 300)
+
+top = int((screen_size[1]/2)-(capture_size[1]/2))
+left = int((screen_size[0]/2)-(capture_size[0]/2))
 
 #https://stackoverflow.com/a/43560140
-mon = {'top': int((1080/2)-(300/2)), 'left': int((1920/2)-(300/2)), 'width': 300, 'height': 300}
+mon = {'top': top, 'left': left, 'width': capture_size[0], 'height': capture_size[1]}
 
 sct = mss()
 
@@ -21,3 +37,11 @@ def capture(view=False):
             cv2.destroyAllWindows()
 
     return frame_rgb
+
+def fps(last_time):
+    time_elapsed =  time() - last_time
+
+    fps = 1/time_elapsed
+
+    return fps
+    #print(f"FPS: {fps}")

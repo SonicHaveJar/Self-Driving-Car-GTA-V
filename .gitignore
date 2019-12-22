@@ -1,7 +1,10 @@
 /.vscode
 /data
-Train.ipynb
 road.jpg
 /env
 /utils/__pycache__
 /updates-toc
+/tests
+test.py
+/.ipynb_checkpoints
+Train.ipynb

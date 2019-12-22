@@ -3,11 +3,6 @@ from inputs import get_gamepad
 import keyboard
 import math
 import threading
-from .directkeys import PressKey, ReleaseKey, A, D
-from time import sleep
-import os
-from keras.models import model_from_json
-import numpy as np
 
 # https://github.com/kevinhughes27/TensorKart/blob/master/utils.py
 class XboxController(object):
@@ -129,46 +124,12 @@ class KeyboardInputs():
                 self.d = 0
 
 
-class Agent():
-    def __init__(self, path):
+class KeyboardSimulator():
+    def __init__(self):
+        self.keyboard = Controller()
 
-        models_accuracies = []
-        for i, model in enumerate(os.listdir(path)):
-            if not model == 'model.json':
-                models_accuracies.append([i, float(model[10:18])])
-        
-        max_accuracy = max(models_accuracies, key=lambda x:x[1])  
-
-        model_name = f"{os.listdir(path)[max_accuracy[0]]}"
-
-        model_json_path = path + 'model.json'
-        model_h5_path = path + model_name
-
-        with open(model_json_path, 'r') as json_file:
-            loaded_model_json = json_file.read()
-
-        self.model = model_from_json(loaded_model_json)
-        self.model.load_weights(model_h5_path)
-
-        self.update_thread = threading.Thread(target=self.update, args=())
-        self.update_thread.daemon = True
-        self.update_thread.start()
-
-    def drive(self, frame):
-
-        prediction = np.argmax(self.model.predict(np.array([frame]))[0])
-
-        if prediction == 0:
-            PressKey(A)
-            #ReleaseKey(A)
-            print('Left')
-        if prediction == 2:
-            PressKey(D)
-            #ReleaseKey(D)
-            print('Right')
-    
-    def update(self):
-        while True:
-            sleep(0.1)
-            ReleaseKey(D)
-            ReleaseKey(A)
+    def steering(self, value):
+        if value == [1, 0, 0]:
+            keyboard.send('a')
+        if value == [0, 0, 1]:
+            keyboard.send('d')
