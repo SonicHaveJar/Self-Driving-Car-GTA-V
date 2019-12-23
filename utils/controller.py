@@ -3,7 +3,7 @@ from inputs import get_gamepad
 import keyboard
 import math
 import threading
-from .directkeys import PressKey, ReleaseKey, A, D
+from .directkeys import PressKey, ReleaseKey, W, A, D
 from time import sleep
 import os
 from keras.models import model_from_json
@@ -103,17 +103,22 @@ class KeyboardInputs():
     def __init__(self):
 
         self.a = 0
-        self.nothing = 0
+        self.nothing = 1
         self.d = 0
 
-        self._monitor_thread = threading.Thread(target=self.monitor, args=())
-        self._monitor_thread.daemon = True
-        self._monitor_thread.start()
+        self.pause = False
+        self.exit = False
 
+        self.monitor_thread = threading.Thread(target=self.monitor, args=())
+        self.monitor_thread.daemon = True
+        self.monitor_thread.start()
 
     def read(self):
         return [self.a, self.nothing, self.d]
     
+    def shortcuts(self):
+        return self.pause, self.exit
+
     def monitor(self):
         while True:
             
@@ -123,13 +128,20 @@ class KeyboardInputs():
             elif keyboard.is_pressed('d'):
                 self.d = 1
                 self.nothing = 0
+
+            elif keyboard.is_pressed('ctrl') and keyboard.is_pressed('p'):
+                self.pause = not self.pause
+
+            elif keyboard.is_pressed('ctrl') and keyboard.is_pressed('e'):
+                self.exit = True
+
             else:
                 self.a = 0
                 self.nothing = 1
                 self.d = 0
 
 
-class Agent():
+class Car():
     def __init__(self, path):
 
         models_accuracies = []
@@ -150,25 +162,43 @@ class Agent():
         self.model = model_from_json(loaded_model_json)
         self.model.load_weights(model_h5_path)
 
+        self.pause = False
+
         self.update_thread = threading.Thread(target=self.update, args=())
         self.update_thread.daemon = True
         self.update_thread.start()
 
-    def drive(self, frame):
+    def drive(self, frame, pause):
+        self.pause = pause
 
         prediction = np.argmax(self.model.predict(np.array([frame]))[0])
+        
+        #Find better way
+        if not self.pause:
+            PressKey(W)
 
-        if prediction == 0:
-            PressKey(A)
-            #ReleaseKey(A)
-            print('Left')
-        if prediction == 2:
-            PressKey(D)
-            #ReleaseKey(D)
-            print('Right')
+            if prediction == 0:
+                PressKey(A)
+                #ReleaseKey(A)
+                print('Left')
+
+            if prediction == 1:
+                #ReleaseKey(A)
+                print('Nothing')
+
+            if prediction == 2:
+                PressKey(D)
+                #ReleaseKey(D)
+                print('Right')
+            
+        else:
+            ReleaseKey(W)
+            ReleaseKey(D)
+            ReleaseKey(A)
     
     def update(self):
-        while True:
-            sleep(0.1)
+        while not self.pause:
+            sleep(0.2)
+            #ReleaseKey(W)
             ReleaseKey(D)
             ReleaseKey(A)

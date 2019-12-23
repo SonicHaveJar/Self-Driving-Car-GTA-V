@@ -9,7 +9,7 @@ import pynput
 
 SendInput = ctypes.windll.user32.SendInput
 
-
+W = 0x11
 A = 0x1E
 D = 0x20
 

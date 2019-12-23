@@ -43,6 +43,10 @@ counter = [len(left), len(nothing), len(right)]
 
 limit = min(counter)
 
+left = shuffle(left)
+nothing = shuffle(nothing)
+right = shuffle(right)
+
 left = left[:limit]
 nothing = nothing[:limit]
 right = right[:limit]
@@ -87,4 +91,3 @@ with open("./data/models/model.json", "w") as json_file:
 checkpoint = ModelCheckpoint('./data/models/model-{epoch:03d}-{accuracy:03f}-{val_accuracy:03f}.h5', verbose=1, monitor='val_loss', save_best_only=True, mode='auto')  
 
 model.fit(X, y_, batch_size=6, epochs=15, validation_split=0.2, callbacks=[checkpoint], verbose=1)
-

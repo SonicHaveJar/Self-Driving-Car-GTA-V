@@ -6,6 +6,7 @@ import os
 from time import sleep, time
 import numpy as np
 from sys import argv
+from utils.directkeys import PressKey, W, ReleaseKey
 
 #        BENCHMARK IN MY PC
 #+---------------------------------+
@@ -22,7 +23,7 @@ view = True if view_arg == 1 else False
 fps_show = True if fps_arg == 1 else False
 
 #ctrl = XboxController()
-k = KeyboardInputs()
+keyboard = KeyboardInputs()
 
 path = './data/'
 imgs_path = path + 'imgs/'
@@ -56,22 +57,35 @@ sleep(5)
 i = 0
 #add hotkeys
 print("Running...")
+PressKey(W)
 while 1:
-    if fps_show:
-        last = time()
-    #ctrl_input = ctrl.read()
-    k_input = k.read()
-    frame = capture(view=True)
-    
-    frame_path = f"{imgs_path}{i}.jpg"
-    cv2.imwrite(frame_path, frame)
+    pause, exit_ = keyboard.shortcuts()
 
-    data = [frame_path, *k_input]
+    if not pause:
 
-    writer.writerow(data)
+        if fps_show:
+            last = time()
+        #ctrl_input = ctrl.read()
+        k_input = keyboard.read()
+        frame = capture(view=view)
+        
+        frame_path = f"{imgs_path}{i}.jpg"
+        cv2.imwrite(frame_path, frame)
 
-    if fps_show:
-        print(fps(last))
+        data = [frame_path, *k_input]
 
-    i+=1
+        writer.writerow(data)
+
+        if fps_show:
+            print(fps(last))
+
+        i+=1
+
+    else:
+        print("Paused.")
+
+    if exit_:
+        break
+
+ReleaseKey(W)
 csv_file.close()
