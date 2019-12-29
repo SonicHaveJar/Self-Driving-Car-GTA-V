@@ -68,7 +68,7 @@ while 1:
         #ctrl_input = ctrl.read()
         k_input = keyboard.read()
         frame = capture(view=view)
-        
+
         frame_path = f"{imgs_path}{i}.jpg"
         cv2.imwrite(frame_path, frame)
 

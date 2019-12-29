@@ -69,7 +69,7 @@ X = np.array(X_imgs)
 y_ = np.array([np.array(i) for i in y])
 
 model = Sequential()
-model.add(Lambda(lambda x: x/127.5-1.0, input_shape=(300, 800, 3)))
+model.add(Lambda(lambda x: x/127.5-1.0, input_shape=(300, 1100, 3)))
 model.add(Conv2D(24, 5, 5, activation='elu', subsample=(2, 2)))
 model.add(Conv2D(36, 5, 5, activation='elu', subsample=(2, 2)))
 model.add(Conv2D(48, 5, 5, activation='elu', subsample=(2, 2)))

@@ -3,6 +3,7 @@ import cv2
 from mss import mss
 from PIL import Image
 from time import time
+from .map import capture_map
 
 #        BENCHMARK IN MY PC
 #+---------------------------------+
@@ -30,13 +31,15 @@ def capture(view=False):
     frame = np.array(Image.frombytes('RGB', (sct.width, sct.height), sct.image))
     frame_rgb = np.array(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
+    full_observation = np.concatenate((capture_map(), frame_rgb), axis=1)
+
     if view:
-        cv2.imshow('Game view', frame_rgb)
+        cv2.imshow('Game view', full_observation)
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
 
-    return frame_rgb
+    return full_observation
 
 def fps(last_time):
     time_elapsed =  time() - last_time

@@ -178,17 +178,27 @@ class Car():
             PressKey(W)
 
             if prediction == 0:
+                if random.randrange(0,3) == 1:
+                    PressKey(W)
+                else:
+                    ReleaseKey(W)
                 PressKey(A)
-                #ReleaseKey(A)
-                print('Left')
+                ReleaseKey(D)
 
             if prediction == 1:
-                #ReleaseKey(A)
+                PressKey(W)
+                ReleaseKey(A)
+                ReleaseKey(D)
                 print('Nothing')
 
             if prediction == 2:
+                if random.randrange(0,3) == 1:
+                    PressKey(W)
+                else:
+                    ReleaseKey(W)
                 PressKey(D)
-                #ReleaseKey(D)
+                ReleaseKey(A)
+                ReleaseKey(S)
                 print('Right')
             
         else:
