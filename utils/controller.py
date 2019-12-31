@@ -173,7 +173,6 @@ class Car():
 
         prediction = np.argmax(self.model.predict(np.array([frame]))[0])
         
-        #Find better way
         if not self.pause:
             PressKey(W)
 

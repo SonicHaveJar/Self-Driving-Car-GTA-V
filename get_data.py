@@ -6,7 +6,7 @@ import os
 from time import sleep, time
 import numpy as np
 from sys import argv
-from utils.directkeys import PressKey, W, ReleaseKey
+import pandas as pd
 
 #        BENCHMARK IN MY PC
 #+---------------------------------+
@@ -48,20 +48,24 @@ if not os.path.exists(file):
     writer = csv.writer(csv_file)
     #writer.writerow(['img', 'steering'])
     writer.writerow(['img', 'left', 'nothing', 'right'])
+    i = 0
 else:
     csv_file = open(file, 'a')
     writer = csv.writer(csv_file)
 
+    df = pd.read_csv(file, names=['img', 'left', 'nothing', 'right'])
+    last_number = str(np.array(df['img'])[-1])
+    last_number = int(last_number[12:-4])
+    i = last_number
+
 print("Waiting 5 seconds...")
 sleep(5)
-i = 0
-#add hotkeys
 print("Running...")
-PressKey(W)
 while 1:
     pause, exit_ = keyboard.shortcuts()
 
     if not pause:
+        print("Running...")
 
         if fps_show:
             last = time()
@@ -87,5 +91,4 @@ while 1:
     if exit_:
         break
 
-ReleaseKey(W)
 csv_file.close()

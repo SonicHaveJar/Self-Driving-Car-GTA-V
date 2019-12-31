@@ -1,7 +1,6 @@
 /.vscode
 /data
 road.jpg
-/env
 /utils/__pycache__
 /tests
 test.py
